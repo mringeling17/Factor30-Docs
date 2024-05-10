@@ -66,7 +66,7 @@ Se alimenta de los datos guardados en el servidor cloud. Este permitira ver los 
 Este paso incluye la recolección, limpieza, análisis y modelado de datos meteorológicos con el objetivo de predecir futuras condiciones climáticas como la temperatura, humedad y velocidad del viento. Se utilizó la API de OpenWeatherMap para obtener datos históricos, y se implementaron varios modelos de aprendizaje automático para realizar las predicciones.
 
 ## Obtención de Datos
-La recolección de datos se llevó a cabo mediante la API de OpenWeatherMap, donde se solicitaron datos históricos de hasta cinco años para una localidad específica. Debido a las restricciones de la API, que limita las llamadas diarias a 1000, el proceso de recolección se planificó para distribuir las solicitudes a lo largo de varios días hasta obtener la totalidad de los datos necesarios.
+La recolección de datos se llevó a cabo mediante la API de OpenWeatherMap, donde se solicitaron datos históricos de hasta cinco años para una localidad específica. Debido a las restricciones de la API, que limita las llamadas diarias a 1000, el proceso de recolección se planificó para distribuir las solicitudes a lo largo de varios días hasta obtener la totalidad de los datos necesarios. Estos datos seran guardados en una base de datos. Luego sirven para poder ver datos historicos desde el cliente web y para entrenar el modelo.
 
 ## Limpieza de Datos
 Una vez recolectados, los datos fueron limpiados para asegurar su calidad y utilidad en el análisis posterior. Este proceso incluyó la eliminación de datos irrelevantes o redundantes, la conversión de formatos de datos para facilitar su manipulación y la imputación de valores faltantes para mantener la integridad del conjunto de datos. Las columnas específicas que se mantuvieron para el análisis y por qué son importantes incluyen:
@@ -80,10 +80,7 @@ Una vez recolectados, los datos fueron limpiados para asegurar su calidad y util
 
 
 ## Análisis Exploratorio de Datos
-Se realizó un análisis exploratorio para entender mejor las características y la distribución de los datos. Este análisis ayudó a identificar patrones, tendencias y posibles anomalías que podrían influir en la precisión de las predicciones futuras.
+Se realizó un análisis exploratorio para entender mejor las características y la distribución de los datos. Este análisis ayudó a identificar patrones, tendencias y posibles anomalías que podrían influir en la precisión de las predicciones futuras. Ademas sirve para identificar y eliminar outliers que podrian afectar al entrenamiento
 
 ## Modelado Predictivo
-Con los datos preparados, se procedió a construir diferentes modelos de machine learning. Se seleccionaron varios algoritmos basados en su relevancia y eficacia para tareas de regresión, incluyendo regresión lineal, bosques aleatorios, máquinas de soporte vectorial y redes neuronales. Cada modelo fue entrenado con un conjunto de datos de entrenamiento y evaluado utilizando un conjunto de datos de prueba.
-
-## Evaluación de Modelos
-La evaluación de cada modelo se llevó a cabo comparando su rendimiento mediante métricas estadísticas que miden la precisión de las predicciones. Este paso fue crucial para determinar cuál modelo proporciona las estimaciones más precisas y consistentes en función de los datos históricos.
+Con los datos preparados, se procedió a construir diferentes modelos de machine learning. Se seleccionaron varios algoritmos basados en su relevancia y eficacia para tareas de regresión, incluyendo regresión lineal, bosques aleatorios, máquinas de soporte vectorial. Cada modelo fue entrenado con un conjunto de datos de entrenamiento y evaluado utilizando un conjunto de datos de prueba.
