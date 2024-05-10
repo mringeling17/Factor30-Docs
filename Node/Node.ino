@@ -47,7 +47,6 @@ void loop() {
   doc["temperature"] = temp;
   doc["humidity"] = hum;
   doc["wind_speed"] = windSpeed;
-  doc["risk_level"] = 0;
   String jsonData;
   serializeJson(doc, jsonData);
 
