@@ -9,14 +9,6 @@ El factor 30-30-30 se refiere a tres condiciones meteorológicas específicas:
 
 Cuando estas tres condiciones se cumplen simultáneamente, el riesgo de que se produzcan incendios forestales peligrosos aumenta drásticamente. Esta regla proporciona un método rápido para identificar días de alto riesgo sin necesidad de análisis complicados o tecnología avanzada.
 
-### Uso del Factor 30-30-30
-
-El factor 30-30-30 es especialmente útil para los siguientes propósitos:
-- **Alerta rápida**: Permite a los responsables de la gestión de incendios identificar rápidamente las condiciones potencialmente peligrosas y tomar medidas preventivas.
-- **Movilización de recursos**: Facilita la decisión de cuándo y dónde movilizar recursos adicionales para la lucha contra incendios, como aviones de extinción de incendios, equipos terrestres y voluntarios.
-- **Planificación y preparación de la comunidad**: Ayuda a las comunidades a prepararse para posibles evacuaciones y otras medidas de seguridad en días de alto riesgo.
-
-
 # Proyecto de Estación Meteorológica con Arduino
 
 ## Descripción
