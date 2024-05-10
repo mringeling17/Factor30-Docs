@@ -1,23 +1,22 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <ArduinoJson.h> // Incluye la biblioteca ArduinoJson
+#include <ArduinoJson.h>
 #include <Wire.h>
 #include <AHT10.h>
 
-// Reemplaza con los detalles de tu red WiFi
 const char* ssid = "705 2,4G";
 const char* password = "12345679";
 
 AHT10 myAHT10(AHT10_ADDRESS_0X38);
-
-// Reemplaza con la URL de tu servidor donde enviarás los datos
 const String serverUrl = "http://192.168.1.115/receive_data";
+
+// Pin para el anemómetro
+const int anemometerPin = 34;
 
 void setup() {
   Wire.begin();
   Serial.begin(9600);
-  
-  // Inicia y espera por la conexión WiFi
+
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -35,32 +34,32 @@ void setup() {
 }
 
 void loop() {
-  HTTPClient http; // Mueve el objeto HTTPClient aquí para que se reinicie en cada ciclo
-  // Lee los valores del sensor AHT10
+  HTTPClient http;
   float temp = myAHT10.readTemperature();
   float hum = myAHT10.readHumidity();
-  int viento = 10; // Valor por defecto del viento en km/h
-  int risk = 0;
 
-  // Preparar los datos en formato JSON
+  // Leer y calcular la velocidad del viento
+  int analogValue = analogRead(anemometerPin);
+  float voltage = analogValue * (3.3 / 4095.0);
+  float windSpeed = 32.4 * (voltage - 0.4); // Ajustar según la calibración de tu anemómetro
+
   DynamicJsonDocument doc(256);
   doc["uuid"] = 1;
   doc["temperature"] = temp;
   doc["humidity"] = hum;
-  doc["wind_speed"] = viento;
+  doc["wind_speed"] = windSpeed;
+  doc["risk_level"] = 0;
   String jsonData;
   serializeJson(doc, jsonData);
 
-  // Configura los headers para enviar JSON
-  http.begin(serverUrl); // Especifica la URL del request
+  http.begin(serverUrl);
   http.addHeader("Content-Type", "application/json");
-
   Serial.println("Data Sent");
 
-  int httpCode = http.POST(jsonData); // Envía la petición POST
+  int httpCode = http.POST(jsonData);
 
-  if (httpCode > 0) { // Verifica si la respuesta ha sido recibida correctamente
-    String payload = http.getString(); // Obtiene la respuesta
+  if (httpCode > 0) {
+    String payload = http.getString();
     Serial.println("Data received successfully from server");
     Serial.println("********************");
   } else {
@@ -68,7 +67,6 @@ void loop() {
     Serial.println(http.errorToString(httpCode).c_str());
   }
 
-  http.end(); // Cierra la conexión
-  
-  delay(5000); // Espera 5 segundos antes de enviar los datos nuevamente
+  http.end();
+  delay(5000);
 }
