@@ -10,8 +10,7 @@ const char* password = "12345679";
 AHT10 myAHT10(AHT10_ADDRESS_0X38);
 const String serverUrl = "http://192.168.1.115/receive_data";
 
-// Pin para el anemómetro
-const int anemometerPin = 34;
+const int anemometerPin = 34; // Pin donde se conecta el anemómetro
 
 void setup() {
   Wire.begin();
@@ -38,10 +37,10 @@ void loop() {
   float temp = myAHT10.readTemperature();
   float hum = myAHT10.readHumidity();
 
-  // Leer y calcular la velocidad del viento
+  // Leer la señal analógica del anemómetro
   int analogValue = analogRead(anemometerPin);
-  float voltage = analogValue * (3.3 / 4095.0);
-  float windSpeed = 32.4 * (voltage - 0.4); // Ajustar según la calibración de tu anemómetro
+  float voltage = analogValue * (3.3 / 4095.0); // Convertir de lectura ADC a voltaje
+  float windSpeed = ((voltage - 0.4) * 32.4) / 1.6; // Convertir voltaje a velocidad del viento en m/s
 
   DynamicJsonDocument doc(256);
   doc["uuid"] = 1;
