@@ -1,7 +1,7 @@
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+#include <WiFi.h>
+#include <WebServer.h>
 #include <ArduinoJson.h>
-#include <ESP8266HTTPClient.h>
+#include <HTTPClient.h>
 
 const char* ssid = "705 2,4G";
 const char* password = "12345679";
@@ -10,7 +10,7 @@ const char* password = "12345679";
 const char* serverUrl = "http://192.168.1.118:5000/receive_data";
 const char* errorUrl = "http://192.168.1.118:5000/error"; // Endpoint para enviar errores
 
-ESP8266WebServer server(80);
+WebServer server(80);
 
 void setup() {
   Serial.begin(9600);
@@ -29,7 +29,6 @@ void setup() {
       return;
     }
 
-    WiFiClient client;
     HTTPClient http;
     
     String payload = server.arg("plain");
@@ -49,7 +48,7 @@ void setup() {
     if (wind_speed == 255) errorFields += "wind_speed ";
 
     if (errorFields.length() > 0) {
-      http.begin(client, errorUrl);
+      http.begin(errorUrl);
       http.addHeader("Content-Type", "application/json");
       String errorMsg = "{\"uuid\":\"" + uuid + "\", \"error_fields\":\"" + errorFields.trim() + "\"}";
       http.POST(errorMsg);
@@ -57,7 +56,7 @@ void setup() {
     }
 
     // Envío de datos al servidor
-    http.begin(client, serverUrl);
+    http.begin(serverUrl);
     http.addHeader("Content-Type", "application/json");
     Serial.println("Sending payload: " + payload); // Debugging output
     int httpCode = http.POST(payload);
