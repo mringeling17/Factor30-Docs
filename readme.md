@@ -63,7 +63,7 @@ Se alimenta de los datos guardados en el servidor cloud. Este permitira ver los 
 # Análisis y Predicción de Datos Meteorológicos
 
 ## Descripción
-Este proyecto abarca la recolección, limpieza, análisis y modelado de datos meteorológicos con el objetivo de predecir futuras condiciones climáticas como la temperatura, humedad y velocidad del viento. Se utilizó la API de OpenWeatherMap para obtener datos históricos, y se implementaron varios modelos de aprendizaje automático para realizar las predicciones.
+Este paso incluye la recolección, limpieza, análisis y modelado de datos meteorológicos con el objetivo de predecir futuras condiciones climáticas como la temperatura, humedad y velocidad del viento. Se utilizó la API de OpenWeatherMap para obtener datos históricos, y se implementaron varios modelos de aprendizaje automático para realizar las predicciones.
 
 ## Obtención de Datos
 La recolección de datos se llevó a cabo mediante la API de OpenWeatherMap, donde se solicitaron datos históricos de hasta cinco años para una localidad específica. Debido a las restricciones de la API, que limita las llamadas diarias a 1000, el proceso de recolección se planificó para distribuir las solicitudes a lo largo de varios días hasta obtener la totalidad de los datos necesarios.
