@@ -47,7 +47,7 @@ X_temp = imputer.fit_transform(X_temp)
 y_temp = imputer.fit_transform(y_temp.reshape(-1, 1)).ravel()
 
 # Dividir los datos en conjuntos de entrenamiento y prueba
-X_train_temp, X_test_temp, y_train_temp, y_test_temp = train_test_split(X_temp, y_temp, test_size=0.3, random_state=42)
+X_train_temp, X_test_temp, y_train_temp, y_test_temp = train_test_split(X_temp, y_temp, test_size=0.2, random_state=42)
 
 # Verificar si hay valores NaN después de la imputación
 print(f'Número de NaNs en X_train_temp: {np.isnan(X_train_temp).sum()}')

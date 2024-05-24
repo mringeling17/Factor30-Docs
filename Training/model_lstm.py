@@ -21,12 +21,10 @@ def create_model(input_shape, optimizer='adam', units=50, dropout_rate=0.2, lear
 def train_lstm(X_train, X_test, y_train, y_test):
     print("Entrenando LSTM")
     
-    # Escalar los datos
     scaler = StandardScaler()
     X_train_temp = scaler.fit_transform(X_train)
     X_test_temp = scaler.transform(X_test)
 
-    # Redimensionar los datos para LSTM
     X_train_temp = X_train_temp.reshape((X_train_temp.shape[0], X_train_temp.shape[1], 1))
     X_test_temp = X_test_temp.reshape((X_test_temp.shape[0], X_test_temp.shape[1], 1))
 

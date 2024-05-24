@@ -48,21 +48,24 @@ def save_weather_data(data):
     wind_speeds = hourly_data.get('wind_speed_10m', [])
 
     for i, timestamp in enumerate(timestamps):
+        print(f"inserting data for {timestamp}")
         cursor.execute("""
-            INSERT INTO weather_data (date_time, temperature, humidity, windspeed, weather_description)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO weather_data (date_time, temperature, humidity, windspeed, weather_description, location_id)
+            VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (date_time) DO NOTHING
         """, (
             timestamp,
             temperatures[i] if i < len(temperatures) else None,
             humidities[i] if i < len(humidities) else None,
             wind_speeds[i] if i < len(wind_speeds) else None,
-            None  # Open-Meteo no proporciona descripciones del clima
+            None,  # Open-Meteo no proporciona descripciones del clima
+            2  # location_id
         ))
     conn.commit()
 
-def fetch_data(lat, lon):
-    start_date = datetime.datetime.now() - datetime.timedelta(days=10*365)
+def fetch_data(lat, lon, start_date_input):
+    start_date = datetime.datetime.strptime(start_date_input, "%d/%m/%Y")
+    start_date = start_date.replace(month=1, day=1)
     end_date = datetime.datetime.now()
 
     current_date = start_date
@@ -74,8 +77,8 @@ def fetch_data(lat, lon):
         if next_date > end_date:
             next_date = end_date
 
-        cursor.execute("SELECT 1 FROM weather_data WHERE date_time BETWEEN %s AND %s", (current_date, next_date))
-        if True:
+        cursor.execute("SELECT 1 FROM weather_data WHERE date_time BETWEEN %s AND %s AND location_id = 2", (current_date, next_date))
+        if cursor.fetchone() is None:
             print(f"Fetching data for {current_date.strftime('%Y-%m-%d')} to {next_date.strftime('%Y-%m-%d')}")
             weather_data = get_weather_data(lat, lon, current_date.strftime('%Y-%m-%d'), next_date.strftime('%Y-%m-%d'))
             if 'hourly' in weather_data:
@@ -88,7 +91,7 @@ def fetch_data(lat, lon):
         current_date = next_date
 
 print("Starting to fetch data")
-fetch_data(35.6895, 139.6917)  # Reemplaza con las coordenadas de tu ciudad
+fetch_data(-33.447487, -70.673676, '23/05/2014')  # Reemplaza con la fecha de inicio deseada
 
 cursor.close()
 conn.close()
