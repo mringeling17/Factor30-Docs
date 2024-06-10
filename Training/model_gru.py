@@ -5,13 +5,10 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 
-def train_gru(X, y):
+def train_gru(X_train, X_test, y_train, y_test):
     # Definir los parámetros del modelo
-    sequence_length = 24 
-    n_features = X.shape[2]
-
-    # Dividir los datos en 80% para entrenamiento y 20% para prueba
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    sequence_length = X_train.shape[1]
+    n_features = X_train.shape[2]
 
     # Normalizar los datos
     from sklearn.preprocessing import StandardScaler
@@ -45,8 +42,3 @@ def train_gru(X, y):
     # Evaluar el modelo
     loss = model.evaluate(X_test_scaled, y_test)
     print(f'MSE en testing: {loss}')
-
-# Ejemplo de uso
-# Suponiendo que ya tienes X e y preparados en el formato adecuado
-# X, y = ... (prepara tus datos aquí)
-# train_gru(X, y)

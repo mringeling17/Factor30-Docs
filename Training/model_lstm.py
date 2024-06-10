@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
@@ -20,15 +19,9 @@ def create_model(input_shape, optimizer='adam', units=50, dropout_rate=0.2, lear
 
 def train_lstm(X_train, X_test, y_train, y_test):
     print("Entrenando LSTM")
-    
-    scaler = StandardScaler()
-    X_train_temp = scaler.fit_transform(X_train)
-    X_test_temp = scaler.transform(X_test)
 
-    X_train_temp = X_train_temp.reshape((X_train_temp.shape[0], X_train_temp.shape[1], 1))
-    X_test_temp = X_test_temp.reshape((X_test_temp.shape[0], X_test_temp.shape[1], 1))
-
-    input_shape = (X_train_temp.shape[1], 1)
+    # No es necesario hacer un reshape aquí ya que la forma es correcta
+    input_shape = (X_train.shape[1], X_train.shape[2])
     model = KerasRegressor(build_fn=create_model, input_shape=input_shape, verbose=0)
 
     param_dist = {
@@ -41,11 +34,11 @@ def train_lstm(X_train, X_test, y_train, y_test):
 
     random_search = RandomizedSearchCV(estimator=model, param_distributions=param_dist, n_iter=20, cv=2, verbose=2, random_state=42, n_jobs=1)
 
-    random_search.fit(X_train_temp, y_train)
+    random_search.fit(X_train, y_train)
 
     best_model = random_search.best_estimator_
-    y_pred_train_lstm_best = best_model.predict(X_train_temp)
-    y_pred_test_lstm_best = best_model.predict(X_test_temp)
+    y_pred_train_lstm_best = best_model.predict(X_train)
+    y_pred_test_lstm_best = best_model.predict(X_test)
 
     train_mse_lstm_best = mean_squared_error(y_train, y_pred_train_lstm_best)
     test_mse_lstm_best = mean_squared_error(y_test, y_pred_test_lstm_best)
