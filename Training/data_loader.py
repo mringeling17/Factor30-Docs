@@ -4,9 +4,6 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
 from utils import create_features_and_labels
-from sklearn.model_selection import train_test_split
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler  # Asegúrate de importar StandardScaler
 
 # Cargar las variables de entorno
 load_dotenv()
@@ -24,27 +21,33 @@ def load_and_prepare_data():
     df['date_time'] = pd.to_datetime(df['date_time'])
     df.set_index('date_time', inplace=True)
     df = df.sort_index()
+    print("Datos cargados y limpiados")
     return df
 
 def prepare_data(df, field):
+    print("Preparando datos")
     X, y = create_features_and_labels(df, field)
+    from sklearn.impute import SimpleImputer
+    from sklearn.model_selection import train_test_split
+
     imputer = SimpleImputer(strategy='mean')
     X = imputer.fit_transform(X)
     y = imputer.fit_transform(y.reshape(-1, 1)).ravel()
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    print("Datos preparados")
     return X_train, X_test, y_train, y_test
 
 def prepare_data_for_rnn(df, field):
+    print("Preparando datos para RNN")
     X, y = create_features_and_labels(df, field)
+    from sklearn.impute import SimpleImputer
+
     imputer = SimpleImputer(strategy='mean')
     X = imputer.fit_transform(X)
     y = imputer.fit_transform(y.reshape(-1, 1)).ravel()
 
-    # Escalar los datos antes de crear secuencias
-    scaler = StandardScaler()
-    X = scaler.fit_transform(X)
-
-    sequence_length = 24  # Por ejemplo, si usas 24 horas como secuencia
+    # Convertir los datos en formato adecuado para la GRU
+    sequence_length = 24  # Ajustar según tu caso
     def create_sequences(data, target, sequence_length):
         sequences = []
         labels = []
@@ -54,8 +57,5 @@ def prepare_data_for_rnn(df, field):
         return np.array(sequences), np.array(labels)
 
     X_seq, y_seq = create_sequences(X, y, sequence_length)
-    
-    # Dividir en conjuntos de entrenamiento y prueba
-    X_train, X_test, y_train, y_test = train_test_split(X_seq, y_seq, test_size=0.2, random_state=42)
-    
-    return X_train, X_test, y_train, y_test
+    print("Datos preparados para RNN")
+    return X_seq, y_seq
